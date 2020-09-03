@@ -20,6 +20,10 @@ public:
 	TreeNode* leftMost(TreeNode *);
 	TreeNode* inorderSuccesor(TreeNode *);
 	void printInorderTraversal(TreeNode *);
+
+	TreeNode* rightMost(TreeNode *);
+	TreeNode* inorderDescendor(TreeNode *);
+	void printReverseTraversal(TreeNode*);
 };
 
 TreeNode* BinaryTree::leftMost(TreeNode *current){
@@ -52,7 +56,35 @@ void BinaryTree::printInorderTraversal(TreeNode *root){
 	cout<<'\n';
 }
 
+TreeNode* BinaryTree::rightMost(TreeNode *current){
+	while(current->m_right_child){
+		current = current->m_right_child;
+	}
+	return current;
+}
 
+TreeNode* BinaryTree::inorderDescendor(TreeNode *current){
+	if(current->m_left_child){
+		return rightMost(current->m_left_child);
+	}
+	else{
+		TreeNode *temp = current;
+		current = current->m_parent;
+		while(current && current->m_right_child!=temp){
+			temp=current;
+			current = current->m_parent;
+		}
+		return current;
+	}
+}
+
+void BinaryTree::printReverseTraversal(TreeNode *root){
+	TreeNode *current=rightMost(root);
+	while(current){
+		cout<<current->m_data<<' ';
+		current = inorderDescendor(current);
+	}
+}
 int main(){
 	TreeNode *ptr_A = new TreeNode("A");
 	TreeNode *ptr_B = new TreeNode("B");
@@ -84,6 +116,7 @@ int main(){
 
 	BinaryTree BT(ptr_A);
 	BT.printInorderTraversal(BT.m_root);
+	BT.printReverseTraversal(BT.m_root);
 	return 0;
 }	
 
